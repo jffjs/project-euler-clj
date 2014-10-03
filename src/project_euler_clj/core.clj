@@ -1,4 +1,5 @@
-(ns project-euler-clj.core)
+(ns project-euler-clj.core
+  (:require [clojure.math.numeric-tower :as math]))
 
 ;; Problem 1
 (defn problem-1 []
@@ -13,3 +14,16 @@
 
 (defn problem-2 []
   (reduce + (filter even? (take-while (partial > 4000000) (fib)))))
+
+;; Problem 3
+(defn prime? [num]
+  (loop [test 2]
+    (cond
+     (= num 1) false
+     (= num 2) true
+     (= (mod num test) 0) false
+     (> test (math/sqrt num)) true
+     :else (recur (inc test)))))
+
+(defn largest-prime-factor [num]
+  )
