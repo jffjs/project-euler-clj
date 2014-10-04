@@ -25,5 +25,15 @@
      (> test (math/sqrt num)) true
      :else (recur (inc test)))))
 
+(def primes (filter prime? (iterate inc 2)))
+
+(defn prime-factorization [num]
+  (let [root (math/sqrt num)]
+    (filter #(= (mod num %) 0) (take-while (partial > root) primes))))
+
 (defn largest-prime-factor [num]
-  )
+  (loop [lpf nil
+         primes primes]
+    (when (> (first primes) (math/sqrt num)) lpf)
+    (recur (if (= (mod num (first primes)) 0) (first primes) lpf)
+           (rest primes))))
