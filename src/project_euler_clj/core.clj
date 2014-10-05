@@ -37,3 +37,20 @@
     (when (> (first primes) (math/sqrt num)) lpf)
     (recur (if (= (mod num (first primes)) 0) (first primes) lpf)
            (rest primes))))
+
+;; Problem 4
+(defn palindrome? [s]
+  (= s (apply str (reverse s))))
+
+(def mem-palindrome? (memoize palindrome?))
+
+(def memoized-product (memoize *))
+
+(defn mem-* [x y]
+  (let [args (sort > [x y])]
+    (apply memoized-product args)))
+
+(defn problem-4 []
+  (take 1 (sort >  (for [x (range 999 99 -1) y (range 999 99 -1)
+                         :when (mem-palindrome? (str (mem-* x y)))]
+                     (mem-* x y)))))
