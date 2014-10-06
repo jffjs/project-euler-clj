@@ -34,9 +34,9 @@
 (defn largest-prime-factor [num]
   (loop [lpf nil
          primes primes]
-    (when (> (first primes) (math/sqrt num)) lpf)
-    (recur (if (= (mod num (first primes)) 0) (first primes) lpf)
-           (rest primes))))
+    (when (> (first primes) (math/sqrt num)) lpf
+          (recur (if (= (mod num (first primes)) 0) (first primes) lpf)
+                 (rest primes)))))
 
 ;; Problem 4
 (defn palindrome? [s]
@@ -52,5 +52,18 @@
 
 (defn problem-4 []
   (take 1 (sort >  (for [x (range 999 99 -1) y (range 999 99 -1)
-                         :when (mem-palindrome? (str (mem-* x y)))]
-                     (mem-* x y)))))
+                         :when (palindrome? (str (* x y)))]
+                     (* x y)))))
+
+;; Problem 5
+(defn evenly-divisible? [num div]
+  (loop [results []
+         divisors div]
+    (if (empty? divisors) (reduce #(and %1 %2) results)
+        (recur (conj results (= (mod num (first divisors)) 0))
+               (rest divisors)))))
+(defn problem-5 []
+  (loop [num 1]
+    (if (and (= (mod num 17) 0) (evenly-divisible? num (range 1 21)))
+      num
+      (recur (inc num)))))
