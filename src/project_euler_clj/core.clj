@@ -19,10 +19,9 @@
 (defn prime? [num]
   (loop [test 2]
     (cond
-     (= num 1) false
-     (= num 2) true
+     ;; (= num 2) true
+     (> (* test test) num) true
      (= (mod num test) 0) false
-     (> test (math/sqrt num)) true
      :else (recur (inc test)))))
 
 (def primes (filter prime? (iterate inc 2)))
@@ -67,3 +66,20 @@
     (if (and (= (mod num 17) 0) (evenly-divisible? num (range 1 21)))
       num
       (recur (inc num)))))
+
+;; Problem 6
+(defn sum-of-squares [nums]
+  (reduce (fn [n1 n2]
+            (+ n1 (* n2 n2))) nums))
+
+(defn square-of-sums [nums]
+  (let [sum (reduce + nums)]
+    (* sum sum)))
+
+(defn problem-6 []
+  (let [nums (range 1 101)]
+    (- (square-of-sums nums) (sum-of-squares nums))))
+
+;; Problem 7
+(defn problem-7 []
+  (take 1 (drop 10000 primes)))
