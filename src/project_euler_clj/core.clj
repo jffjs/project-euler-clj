@@ -175,3 +175,20 @@
                                     [(.indexOf grid row) (.indexOf row o)]
                                     dir))
                 row)))))
+
+;; Problem 12
+(defn triangle-num [n]
+  (reduce + (range n 0 -1)))
+
+(defn factorization [num]
+  (conj (vec (filter #(= (mod num %) 0)
+                     (take-while #(<= (* % 2) num) (iterate inc 1))))
+        num))
+
+(defn problem-12 [start stop]
+  (loop [n start
+         triangle (triangle-num n)]
+    (if (= (count (factorization triangle)) stop)
+      triangle
+      (recur (inc n)
+             (triangle-num n)))))
