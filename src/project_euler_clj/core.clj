@@ -144,8 +144,34 @@
    [20 73 35 29 78 31 90 1 74 31 49 71 48 86 81 16 23 57 5 54]
    [1 70 54 71 83 51 54 69 16 92 33 48 61 43 52 1 89 19 67 48]])
 
-(def dir {:n [[0 0] [-1 0] [-2 0] [-3 0]]
-          :e [[0 0] [0 1] [0 2] [0 3]]
-          :s [[0 0] [1 0] [2 0] [3 0]]
-          :w [[0 0] [0 -1] [0 -2] [0 -3]]
+(def dir {:n  [[0 0] [-1 0] [-2 0] [-3 0]]
+          :ne [[0 0] [-1 1] [-2 2] [-3 3]]
+          :e  [[0 0] [0 1] [0 2] [0 3]]
+          :se [[0 0] [1 1] [2 2] [3 3]]
+          :s  [[0 0] [1 0] [2 0] [3 0]]
+          :sw [[0 0] [1 -1] [2 -2] [3 -3]]
+          :w  [[0 0] [0 -1] [0 -2] [0 -3]]
+          :nw [[0 0] [-1 -1] [-2 -2] [-3 -3]]
           })
+
+(defn add-points [p1 p2]
+  [(+ (get p1 0) (get p2 0))
+   (+ (get p1 1) (get p2 1))])
+
+(defn get-adjacent [grid coord dir]
+  (map (fn [step]
+         (get-in grid (add-points coord step) 0)) dir))
+
+(defn get-adj-products [grid coord dirs]
+  (map (fn [dir]
+         (reduce * (get-adjacent grid coord dir))) (vals dirs)))
+
+(defn problem-11 []
+  (apply max
+        (flatten
+         (for [row grid]
+           (map (fn [o]
+                  (get-adj-products grid
+                                    [(.indexOf grid row) (.indexOf row o)]
+                                    dir))
+                row)))))
