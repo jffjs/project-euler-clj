@@ -185,10 +185,29 @@
                      (take-while #(<= (* % 2) num) (iterate inc 1))))
         num))
 
+(defn divisors [num]
+  (let [powers (atom [])]
+    (loop [n num
+           primes (reverse (prime-factorization num))]
+      (if (empty? primes)
+        (let [num-divisors (reduce * (map inc @powers))]
+          (if (> n 1)
+            (* num-divisors 2)
+            num-divisors))
+        (recur
+         (loop [power 0
+                n2 n]
+           (if (> (mod n2 (first primes)) 0)
+             (do (swap! powers #(conj % power))
+                 n2)
+             (recur (inc power)
+                    (/ n2 (first primes)))))
+         (rest primes))))))
+
 (defn problem-12 [start stop]
   (loop [n start
          triangle (triangle-num n)]
-    (if (= (count (factorization triangle)) stop)
+    (if (> (divisors triangle) stop)
       triangle
       (recur (inc n)
              (triangle-num n)))))
